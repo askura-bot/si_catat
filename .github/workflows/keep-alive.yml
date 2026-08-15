@@ -1,0 +1,30 @@
+name: Keep Supabase Alive
+
+on:
+  # Berjalan secara terjadwal setiap 3 hari sekali (jam 00:00 UTC)
+  schedule:
+    - cron: '0 0 */3 * *'
+  
+  # Memungkinkan workflow ini dijalankan secara manual dari dashboard GitHub Actions
+  workflow_dispatch:
+
+jobs:
+  ping-api:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Ping Keep-Alive Endpoint
+        # Ganti https://YOUR-VERCEL-DOMAIN.vercel.app dengan domain Vercel asli Anda nanti
+        # Namun Anda bisa menyetel URL ini via Github Repository Secrets (APP_URL)
+        run: |
+          # Prioritaskan secret URL jika ada, jika tidak, gunakan placeholder atau biarkan fail/skip.
+          TARGET_URL="${{ secrets.APP_URL }}"
+          if [ -z "$TARGET_URL" ]; then
+            echo "Error: APP_URL secret is not set. Please set your Vercel domain in GitHub Secrets."
+            echo "Example: https://my-kas-kontrakan.vercel.app"
+            exit 1
+          fi
+          
+          echo "Pinging $TARGET_URL/api/ping ..."
+          curl -f -s "$TARGET_URL/api/ping"
+          echo -e "\nPing successful!"

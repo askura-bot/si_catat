@@ -183,3 +183,43 @@ export async function deleteIncome(incomeId: string): Promise<ActionResult> {
   revalidatePath('/');
   return { success: true };
 }
+
+/**
+ * Edit transaksi iuran (koreksi nominal, dll).
+ * Admin only.
+ */
+export async function updateIncome(
+  incomeId: string,
+  amount: number,
+  note?: string,
+  date?: string
+): Promise<ActionResult> {
+  const isAdmin = await checkIsAdmin();
+  if (!isAdmin) {
+    return { success: false, error: 'Akses ditolak. Login sebagai admin.' };
+  }
+
+  if (!incomeId) {
+    return { success: false, error: 'ID transaksi tidak valid.' };
+  }
+
+  if (isNaN(amount) || amount <= 0) {
+    return { success: false, error: 'Nominal harus lebih dari 0.' };
+  }
+
+  const { error } = await supabase
+    .from('incomes')
+    .update({
+      amount,
+      note: note && note.trim().length > 0 ? note.trim() : null,
+      ...(date ? { date } : {}),
+    })
+    .eq('id', incomeId);
+
+  if (error) {
+    return { success: false, error: `Gagal mengubah iuran: ${error.message}` };
+  }
+
+  revalidatePath('/');
+  return { success: true };
+}

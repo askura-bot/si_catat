@@ -102,46 +102,60 @@ export async function getOrCreateCurrentPeriod(): Promise<Period> {
 // 2. calculateCarryOver(periodId)
 // ============================================================
 
-/**
- * Menghitung Saldo Awal (Carry-over Balance) untuk suatu periode.
- *
- * Caranya: jumlahkan SELURUH pemasukan dikurangi SELURUH pengeluaran
- * dari semua periode yang secara kronologis SEBELUM periode target.
- *
- * Rumus:
- *   carry_over = Σ incomes(bulan < N) - Σ expenses(bulan < N)
- *
- * Handle defisit: jika hasilnya negatif, itu memang saldo awal negatif.
- */
 export async function calculateCarryOver(period: Period): Promise<number> {
-  // Ambil semua periode yang lebih lama dari periode target
+  if (period.initial_balance !== null) {
+    return Number(period.initial_balance);
+  }
+
+  // Ambil semua periode yang lebih lama dari periode target (terurut terbaru ke terlama)
   const { data: olderPeriods, error: periodsError } = await supabase
     .from('periods')
-    .select('id, month, year');
+    .select('*')
+    .order('year', { ascending: false })
+    .order('month', { ascending: false });
 
   if (periodsError) {
     throw new Error(`Gagal mengambil daftar periode: ${periodsError.message}`);
   }
 
   // Filter periode yang secara kronologis sebelum periode target
-  const olderPeriodIds = (olderPeriods ?? [])
+  const validOlderPeriods = (olderPeriods ?? [])
     .filter((p) => {
       if (p.year < period.year) return true;
       if (p.year === period.year && p.month < period.month) return true;
       return false;
-    })
-    .map((p) => p.id);
+    });
 
   // Jika tidak ada periode sebelumnya, carry-over = 0
-  if (olderPeriodIds.length === 0) {
+  if (validOlderPeriods.length === 0) {
     return 0;
   }
 
-  // Total pemasukan dari semua bulan sebelumnya
+  // Cari periode terdekat (paling baru) yang memiliki initial_balance override
+  const overrideIndex = validOlderPeriods.findIndex(p => p.initial_balance !== null);
+  
+  let baseBalance = 0;
+  let periodsToCalculate = validOlderPeriods;
+
+  if (overrideIndex !== -1) {
+    baseBalance = Number(validOlderPeriods[overrideIndex].initial_balance);
+    // Kita perlu menjumlahkan pemasukan/pengeluaran mulai dari periode yang memiliki override
+    // hingga periode tepat sebelum target.
+    // Karena list terurut descending (0 = paling baru), maka index 0 s/d overrideIndex adalah periode yang relevan.
+    periodsToCalculate = validOlderPeriods.slice(0, overrideIndex + 1);
+  }
+
+  const periodIdsToCalculate = periodsToCalculate.map(p => p.id);
+
+  if (periodIdsToCalculate.length === 0) {
+    return baseBalance;
+  }
+
+  // Total pemasukan
   const { data: incomeRows, error: incomeError } = await supabase
     .from('incomes')
     .select('amount')
-    .in('period_id', olderPeriodIds);
+    .in('period_id', periodIdsToCalculate);
 
   if (incomeError) {
     throw new Error(`Gagal menghitung pemasukan lama: ${incomeError.message}`);
@@ -152,11 +166,11 @@ export async function calculateCarryOver(period: Period): Promise<number> {
     0
   );
 
-  // Total pengeluaran dari semua bulan sebelumnya
+  // Total pengeluaran
   const { data: expenseRows, error: expenseError } = await supabase
     .from('expenses')
     .select('amount')
-    .in('period_id', olderPeriodIds);
+    .in('period_id', periodIdsToCalculate);
 
   if (expenseError) {
     throw new Error(`Gagal menghitung pengeluaran lama: ${expenseError.message}`);
@@ -167,7 +181,37 @@ export async function calculateCarryOver(period: Period): Promise<number> {
     0
   );
 
-  return totalPastIncome - totalPastExpense;
+  return baseBalance + totalPastIncome - totalPastExpense;
+}
+
+// ============================================================
+// 2b. updateInitialBalance(periodId, amount)
+// ============================================================
+
+import { revalidatePath } from 'next/cache';
+import { checkIsAdmin } from '@/lib/auth';
+
+/**
+ * Update atau reset saldo awal suatu periode (Admin only).
+ * Jika amount === null, artinya reset ke hitungan otomatis.
+ */
+export async function updateInitialBalance(periodId: string, amount: number | null): Promise<{ success: boolean; error?: string }> {
+  const isAdmin = await checkIsAdmin();
+  if (!isAdmin) {
+    return { success: false, error: 'Akses ditolak.' };
+  }
+
+  const { error } = await supabase
+    .from('periods')
+    .update({ initial_balance: amount })
+    .eq('id', periodId);
+
+  if (error) {
+    return { success: false, error: `Gagal memperbarui saldo awal: ${error.message}` };
+  }
+
+  revalidatePath('/');
+  return { success: true };
 }
 
 // ============================================================

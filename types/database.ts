@@ -36,6 +36,7 @@ export interface Period {
   id: string;
   month: number; // 1–12
   year: number;  // >= 2020
+  initial_balance: number | null;
   created_at: string;
 }
 

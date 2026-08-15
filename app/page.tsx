@@ -6,7 +6,7 @@ import {
   getAllPeriods,
   getMonthName,
 } from '@/actions/cashflow';
-import { getMembersWithTotalPaid } from '@/actions/incomes';
+import { getMembersWithTotalPaid, getIncomesByPeriod } from '@/actions/incomes';
 import { getAllMembers, getActiveMembers } from '@/actions/members';
 import { getExpenses } from '@/actions/expenses';
 import { DashboardClient } from '@/components/dashboard/dashboard-client';
@@ -38,10 +38,11 @@ export default async function Home({
   }
 
   // 3. Fetch data untuk periode tersebut secara paralel
-  const [summary, memberSummaries, expenses, allMembersList, activeMembersList] =
+  const [summary, memberSummaries, incomes, expenses, allMembersList, activeMembersList] =
     await Promise.all([
       getPeriodSummary(currentPeriod.id),
       getMembersWithTotalPaid(currentPeriod.id),
+      getIncomesByPeriod(currentPeriod.id),
       getExpenses(currentPeriod.id),
       getAllMembers(),
       getActiveMembers(),
@@ -58,6 +59,7 @@ export default async function Home({
           allPeriods={allPeriods}
           summary={summary}
           memberSummaries={memberSummaries}
+          incomes={incomes}
           expenses={expenses}
           allMembers={allMembersList}
           activeMembers={activeMembersList}

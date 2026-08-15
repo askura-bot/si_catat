@@ -10,6 +10,7 @@ import {
   Users,
   ChevronDown,
   X,
+  Pencil,
 } from 'lucide-react';
 import { generateWhatsAppSummary } from '@/lib/whatsapp';
 import type { Period, PeriodSummary, Expense, Member, MemberIncomeSummary } from '@/types/database';
@@ -17,8 +18,11 @@ import type { Period, PeriodSummary, Expense, Member, MemberIncomeSummary } from
 import { IncomeModal } from './income-modal';
 import { ExpenseModal } from './expense-modal';
 import { ManageMembersModal } from './manage-members-modal';
+import { EditInitialBalanceModal } from './edit-initial-balance-modal';
+import { MemberIncomeHistoryModal } from './member-income-history-modal';
 import { deleteIncome } from '@/actions/incomes';
 import { deleteExpense } from '@/actions/expenses';
+import type { Income } from '@/types/database';
 
 // Format helper
 function formatRupiah(amount: number): string {
@@ -45,6 +49,7 @@ interface DashboardClientProps {
   allPeriods: PeriodWithLabel[];
   summary: PeriodSummary;
   memberSummaries: MemberIncomeSummary[];
+  incomes: Income[];
   expenses: Expense[];
   allMembers: Member[];
   activeMembers: Member[];
@@ -57,6 +62,7 @@ export function DashboardClient({
   allPeriods,
   summary,
   memberSummaries,
+  incomes,
   expenses,
   allMembers,
   activeMembers,
@@ -69,6 +75,8 @@ export function DashboardClient({
   const [showIncomeModal, setShowIncomeModal] = useState(false);
   const [showExpenseModal, setShowExpenseModal] = useState(false);
   const [showManageModal, setShowManageModal] = useState(false);
+  const [showEditBalance, setShowEditBalance] = useState(false);
+  const [selectedMemberForHistory, setSelectedMemberForHistory] = useState<{ id: string; name: string } | null>(null);
   const [copiedWA, setCopiedWA] = useState(false);
 
   // Handlers
@@ -127,12 +135,23 @@ export function DashboardClient({
   const SummarySection = (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
       {[
-        { label: 'Saldo Awal', value: summary.carry_over, sub: 'Bulan lalu' },
-        { label: 'Total Iuran', value: summary.total_income, sub: 'Masuk bulan ini' },
-        { label: 'Total Pengeluaran', value: summary.total_expense, sub: 'Keluar bulan ini', isExpense: true },
+        { id: 'carry_over', label: 'Saldo Awal', value: summary.carry_over, sub: currentPeriod.initial_balance !== null ? 'Manual override' : 'Bulan lalu' },
+        { id: 'income', label: 'Total Iuran', value: summary.total_income, sub: 'Masuk bulan ini' },
+        { id: 'expense', label: 'Total Pengeluaran', value: summary.total_expense, sub: 'Keluar bulan ini', isExpense: true },
       ].map((card) => (
-        <div key={card.label} className="bg-[#2C1A10] border border-[#5C3D2E] rounded px-4 py-3 shadow-[0_2px_8px_rgba(202,138,4,0.15)]">
-          <p className="font-[Cinzel] text-[10px] uppercase tracking-[1px] text-[#BFA98A] mb-1">{card.label}</p>
+        <div key={card.label} className="bg-[#2C1A10] border border-[#5C3D2E] rounded px-4 py-3 shadow-[0_2px_8px_rgba(202,138,4,0.15)] relative group">
+          <div className="flex justify-between items-start">
+            <p className="font-[Cinzel] text-[10px] uppercase tracking-[1px] text-[#BFA98A] mb-1">{card.label}</p>
+            {isAdmin && card.id === 'carry_over' && (
+              <button
+                onClick={() => setShowEditBalance(true)}
+                title="Atur Saldo Awal"
+                className="text-[#5C3D2E] hover:text-[#CA8A04] transition-colors cursor-pointer"
+              >
+                <Pencil size={12} />
+              </button>
+            )}
+          </div>
           <p className={`font-[Fira_Code] text-lg font-semibold tabular-nums ${card.isExpense && card.value > 0 ? 'text-[#F87171]' : card.value < 0 ? 'text-[#F87171]' : 'text-[#F5E6D3]'}`}>
             {card.isExpense && card.value > 0 ? '-' : ''}{formatRupiah(Math.abs(card.value))}
           </p>
@@ -225,8 +244,19 @@ export function DashboardClient({
               <tr><td colSpan={2} className="px-4 py-8 text-center font-[Spectral] text-sm text-[#5C3D2E] italic">Belum ada data anggota.</td></tr>
             ) : (
               memberSummaries.map((m) => (
-                <tr key={m.member_id} className="border-b border-[#3D2517]/50 hover:bg-[#3D2517]/30 transition-colors">
-                  <td className="px-4 py-3 font-[Spectral] text-sm text-[#F5E6D3]">{m.member_name}</td>
+                <tr key={m.member_id} className="border-b border-[#3D2517]/50 hover:bg-[#3D2517]/30 transition-colors group">
+                  <td className="px-4 py-3 font-[Spectral] text-sm text-[#F5E6D3] flex items-center gap-2">
+                    {m.member_name}
+                    {isAdmin && (
+                      <button
+                        onClick={() => setSelectedMemberForHistory({ id: m.member_id, name: m.member_name })}
+                        title="Edit Iuran Anggota"
+                        className="text-[#5C3D2E] opacity-0 group-hover:opacity-100 hover:text-[#CA8A04] transition-all cursor-pointer"
+                      >
+                        <Pencil size={12} />
+                      </button>
+                    )}
+                  </td>
                   <td className="px-4 py-3 text-right font-[Fira_Code] text-sm text-[#F5E6D3] tabular-nums">
                     {m.total_amount > 0 ? (
                       <span className="text-[#22C55E]">{formatRupiah(m.total_amount)}</span>
@@ -302,6 +332,23 @@ export function DashboardClient({
       )}
       {showManageModal && (
         <ManageMembersModal allMembers={allMembers} onClose={() => setShowManageModal(false)} onSuccess={handleRefresh} />
+      )}
+      {showEditBalance && (
+        <EditInitialBalanceModal
+          periodId={currentPeriod.id}
+          currentValue={currentPeriod.initial_balance}
+          onClose={() => setShowEditBalance(false)}
+          onSuccess={handleRefresh}
+        />
+      )}
+      {selectedMemberForHistory && (
+        <MemberIncomeHistoryModal
+          memberId={selectedMemberForHistory.id}
+          memberName={selectedMemberForHistory.name}
+          incomes={incomes}
+          onClose={() => setSelectedMemberForHistory(null)}
+          onSuccess={handleRefresh}
+        />
       )}
     </>
   );

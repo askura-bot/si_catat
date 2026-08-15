@@ -31,40 +31,44 @@ export function ManageMembersModal({ allMembers, onClose, onSuccess }: ManageMem
     <div
       ref={overlayRef}
       onClick={handleOverlayClick}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm animate-[fadeIn_200ms_ease-out]"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#333333]/40 backdrop-blur-sm animate-[fadeIn_200ms_ease-out] p-4"
     >
-      <div className="relative w-full max-w-md mx-4 bg-[#2C1A10] border border-[#5C3D2E] rounded-md shadow-[0_8px_32px_rgba(202,138,4,0.3)] animate-[slideUp_300ms_ease-out] flex flex-col max-h-[85vh]">
-        <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#CA8A04] rounded-t-md" />
-
-        <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-[#3D2517] shrink-0">
-          <h2 className="font-[Cinzel] text-lg font-bold text-[#CA8A04] flex items-center gap-2">
-            <Users size={18} />
+      <div className="relative w-full max-w-md bg-[#FFFFFF] border border-[#E5E7EB] rounded-[24px] shadow-[0_8px_32px_rgba(0,0,0,0.08)] animate-[slideUp_420ms_ease-out] flex flex-col max-h-[85vh] overflow-hidden">
+        <div className="flex items-center justify-between px-6 pt-6 pb-2 shrink-0">
+          <h2 className="text-xl font-bold text-[#333333] flex items-center gap-2">
+            <Users className="text-[#008B8B]" size={20} />
             Kelola Anggota
           </h2>
           <button
             onClick={onClose}
-            className="p-1 text-[#BFA98A] rounded hover:bg-[#3D2517] hover:text-[#F5E6D3] transition-colors cursor-pointer"
+            className="p-1.5 text-[#6B7280] rounded-full hover:bg-[#F3F4F6] hover:text-[#333333] transition-colors cursor-pointer"
           >
             <X size={18} />
           </button>
         </div>
 
-        <div className="flex border-b border-[#3D2517] shrink-0">
+        <div className="flex border-b border-[#E5E7EB] shrink-0 px-4 mt-2">
           <button
             onClick={() => setActiveTab('list')}
-            className={`flex-1 py-3 text-sm font-[Cinzel] font-semibold uppercase tracking-wider transition-colors ${
-              activeTab === 'list' ? 'text-[#CA8A04] border-b-2 border-[#CA8A04]' : 'text-[#BFA98A] hover:text-[#F5E6D3]'
+            className={`flex-1 py-3 text-sm font-semibold transition-colors relative ${
+              activeTab === 'list' ? 'text-[#008B8B]' : 'text-[#6B7280] hover:text-[#333333]'
             }`}
           >
             Daftar Anggota
+            {activeTab === 'list' && (
+              <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#008B8B] rounded-t-full" />
+            )}
           </button>
           <button
             onClick={() => setActiveTab('add')}
-            className={`flex-1 py-3 text-sm font-[Cinzel] font-semibold uppercase tracking-wider transition-colors ${
-              activeTab === 'add' ? 'text-[#CA8A04] border-b-2 border-[#CA8A04]' : 'text-[#BFA98A] hover:text-[#F5E6D3]'
+            className={`flex-1 py-3 text-sm font-semibold transition-colors relative ${
+              activeTab === 'add' ? 'text-[#008B8B]' : 'text-[#6B7280] hover:text-[#333333]'
             }`}
           >
             Tambah Baru
+            {activeTab === 'add' && (
+              <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#008B8B] rounded-t-full" />
+            )}
           </button>
         </div>
 
@@ -92,12 +96,12 @@ function MembersListTab({ members, onSuccess }: { members: Member[]; onSuccess: 
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="font-[Cinzel] text-xs font-semibold text-[#F5E6D3] mb-3 uppercase tracking-wider">
+        <h3 className="text-xs font-bold text-[#6B7280] mb-3 uppercase tracking-wider">
           Anggota Aktif ({activeMembers.length})
         </h3>
         <div className="space-y-2">
           {activeMembers.length === 0 ? (
-            <p className="text-sm font-[Spectral] text-[#5C3D2E] italic">Belum ada anggota aktif.</p>
+            <p className="text-sm text-[#9CA3AF] italic">Belum ada anggota aktif.</p>
           ) : (
             activeMembers.map((m) => (
               <MemberRow key={m.id} member={m} isActive={true} onSuccess={onSuccess} />
@@ -108,10 +112,10 @@ function MembersListTab({ members, onSuccess }: { members: Member[]; onSuccess: 
 
       {inactiveMembers.length > 0 && (
         <div>
-          <h3 className="font-[Cinzel] text-xs font-semibold text-[#5C3D2E] mb-3 uppercase tracking-wider">
+          <h3 className="text-xs font-bold text-[#9CA3AF] mb-3 uppercase tracking-wider">
             Nonaktif ({inactiveMembers.length})
           </h3>
-          <div className="space-y-2">
+          <div className="space-y-2 opacity-75">
             {inactiveMembers.map((m) => (
               <MemberRow key={m.id} member={m} isActive={false} onSuccess={onSuccess} />
             ))}
@@ -133,20 +137,20 @@ function MemberRow({ member, isActive, onSuccess }: { member: Member; isActive: 
   }
 
   return (
-    <div className="flex items-center justify-between p-2 rounded bg-[#1A0F0A]/50 border border-[#3D2517]">
-      <span className={`font-[Spectral] text-sm ${isActive ? 'text-[#F5E6D3]' : 'text-[#5C3D2E] line-through'}`}>
+    <div className="flex items-center justify-between p-3 rounded-xl bg-[#F8F9FA] border border-[#E5E7EB]">
+      <span className={`text-sm font-medium ${isActive ? 'text-[#333333]' : 'text-[#9CA3AF] line-through'}`}>
         {member.name}
       </span>
       <button
         onClick={handleToggle}
         disabled={isPending}
-        className={`inline-flex items-center gap-1 px-2 py-1 text-[10px] font-[Cinzel] uppercase tracking-wider border rounded transition-all duration-200 disabled:opacity-50 cursor-pointer ${
+        className={`inline-flex items-center gap-1 px-3 py-1.5 text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-200 disabled:opacity-50 cursor-pointer ${
           isActive
-            ? 'text-[#991B1B] border-[#991B1B]/30 hover:bg-[#991B1B]/15'
-            : 'text-[#22C55E] border-[#22C55E]/30 hover:bg-[#22C55E]/10'
+            ? 'text-[#EF4444] bg-[#FEF2F2] hover:bg-[#FEE2E2]'
+            : 'text-[#10B981] bg-[#ECFDF5] hover:bg-[#D1FAE5]'
         }`}
       >
-        {isPending ? '...' : isActive ? <><UserX size={12} /> Nonaktif</> : <><UserCheck size={12} /> Aktifkan</>}
+        {isPending ? '...' : isActive ? <><UserX size={14} /> Nonaktif</> : <><UserCheck size={14} /> Aktifkan</>}
       </button>
     </div>
   );
@@ -167,9 +171,9 @@ function AddMemberTab({ onSuccess }: { onSuccess: () => void }) {
   }, [state?.success, onSuccess]);
 
   return (
-    <form action={formAction} className="space-y-4">
+    <form action={formAction} className="space-y-5">
       <div>
-        <label className="block font-[Spectral] text-sm font-medium text-[#F5E6D3] mb-1.5">
+        <label className="block text-sm font-medium text-[#333333] mb-1.5">
           Nama Anggota Baru
         </label>
         <input
@@ -178,12 +182,12 @@ function AddMemberTab({ onSuccess }: { onSuccess: () => void }) {
           type="text"
           required
           placeholder="Contoh: Budi"
-          className="w-full h-10 px-3 bg-[#2C1A10] text-[#F5E6D3] border border-[#5C3D2E] rounded font-[Spectral] text-sm focus:border-[#CA8A04] focus:ring-2 focus:ring-[#CA8A04]/25 focus:outline-none"
+          className="w-full h-11 px-4 bg-[#FFFFFF] text-[#333333] border border-[#D1D5DB] rounded-xl text-sm focus:border-[#008B8B] focus:ring-2 focus:ring-[#008B8B] focus:ring-offset-1 focus:outline-none placeholder:text-[#9CA3AF]"
         />
       </div>
 
       {state?.error && (
-        <div className="px-3 py-2 bg-[#991B1B]/15 border border-[#991B1B]/30 rounded font-[Spectral] text-xs text-[#F87171]">
+        <div className="px-4 py-3 bg-[#FEF2F2] border border-[#FCA5A5] rounded-xl text-sm text-[#EF4444]">
           {state.error}
         </div>
       )}
@@ -191,9 +195,9 @@ function AddMemberTab({ onSuccess }: { onSuccess: () => void }) {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full h-10 flex items-center justify-center gap-2 bg-[#CA8A04] text-[#1A0F0A] border border-[#DAA520] rounded font-[Cinzel] text-sm font-bold uppercase tracking-wider hover:bg-[#B8780A] disabled:opacity-35 cursor-pointer"
+        className="w-full h-11 flex items-center justify-center gap-2 bg-[#008B8B] text-[#FFFFFF] rounded-full text-sm font-bold transition-all duration-200 hover:bg-[#007676] hover:shadow-md active:translate-y-[1px] disabled:opacity-50 cursor-pointer"
       >
-        {isPending ? 'Menyimpan...' : <><UserPlus size={16} /> Tambah</>}
+        {isPending ? 'Menyimpan...' : <><UserPlus size={18} /> Tambah</>}
       </button>
     </form>
   );

@@ -1,136 +1,117 @@
-# QuestUI Design System
+---
+version: "alpha"
+name: "Corporate Radial Process"
+description: "Corporate Radial Process — Design data visualization com radial, process, timeline. Template e prompt pronto para IA."
+colors:
+  primary: "#FFFFFF"
+  secondary: "#333333"
+  tertiary: "#008B8B"
+  neutral: "#008B8B"
+  surface: "#20B2AA"
+  accent: "#48D1CC"
+typography:
+  h1:
+    fontFamily: Open Sans
+    fontSize: 2.5rem
+    fontWeight: 700
+  body-md:
+    fontFamily: Open Sans
+    fontSize: 1rem
+    fontWeight: 400
+components:
+  button-primary:
+    backgroundColor: "{colors.primary}"
+    textColor: "{colors.neutral}"
+    padding: 12px
+---
 
 ## Overview
 
-QuestUI is a fantasy-inspired, ornate, RPG-styled design system built for RPG game interfaces and fantasy gaming platforms. Rich golds, deep reds, and royal purples evoke the grandeur of medieval kingdoms and enchanted realms. Every element carries a sense of weight and craftsmanship, from the decorative serif headlines to the warm golden glows that frame interactive components.
+Corporate Radial Process — Design data visualization com radial, process, timeline. Template e prompt pronto para IA. Estilo Corporate Radial Process representa uma tendência moderna em design UI/UX web com foco em data visualization.
 
----
+- Density: 3/10 — Airy
+- Variance: 2/10 — Structured
+- Motion: 4/10 — Subtle
+
+- **Style:** Professional, Structured, Organizational
+- **Keywords:** radial, process, timeline, corporate, clean, vector, flat, organization
+- **Era:** Modern Corporate
+- **Light/Dark:** ✓ Full / ✗ No
 
 ## Colors
 
-- **Primary Gold** (#CA8A04): Primary actions, highlights
-- **Secondary Deep Red** (#991B1B): Secondary accents, warnings
-- **Tertiary Royal Purple** (#581C87): Rare items, special elements
-- **Background** (#1A0F0A): Page background
-- **Surface Default** (#2C1A10): Card backgrounds
-- **Success** (#22C55E): Quest complete, health
-- **Warning** (#CA8A04): Low resources, caution
-- **Error** (#991B1B): Damage, failed, danger
-- **Info** (#581C87): Lore, magic, special info
+- **Background** (#FFFFFF) — Primary background surface
+- **Text** (#333333) — Primary text color
+- **Accent** (#008B8B) — Primary accent, CTAs and interactive elements
+- **Segment 1** (#008B8B) — Extended palette, decorative use
+- **Segment 2** (#20B2AA) — Extended palette, decorative use
+- **Segment 3** (#48D1CC) — Extended palette, decorative use
 
 ## Typography
 
-- **Headline Font**: Cinzel
-- **Body Font**: Spectral
-- **Mono Font**: Fira Code
+- **Display / Hero:** Open Sans — Weight 700, tight tracking, used for headline impact
+- **Body:** Open Sans — Weight 400, 16px/1.6 line-height, max 72ch per line
+- **UI Labels / Captions:** Open Sans — 0.875rem, weight 500, slight letter-spacing
+- **Monospace:** JetBrains Mono — Used for code, metadata, and technical values
 
-- **Display**: Cinzel 40px bold, 1.15 line height
-- **H1**: Cinzel 32px bold, 1.2 line height
-- **H2**: Cinzel 24px semibold, 1.25 line height
-- **H3**: Cinzel 20px semibold, 1.3 line height
-- **H4**: Cinzel 16px regular, 1.35 line height
-- **Body LG**: Spectral 18px regular, 1.7 line height
-- **Body**: Spectral 16px regular, 1.7 line height
-- **Body SM**: Spectral 14px regular, 1.6 line height
-- **Caption**: Spectral 12px medium, 1.4 line height
-- **Code**: Fira Code 14px regular, 1.6 line height
+Scale:
+- Hero: clamp(2.5rem, 5vw, 4rem)
+- H1: 2.25rem
+- H2: 1.5rem
+- Body: 1rem / 1.6
+- Small: 0.875rem
 
----
+## Layout
 
-## Spacing
+- **Grid:** CSS Grid primary. Max-width containment: 1280px centered with 1.5rem side padding.
+- **Spacing rhythm:** Balanced. Base unit: 0.5rem (8px).
+- **Section vertical gaps:** clamp(4rem, 8vw, 8rem).
+- **Hero layout:** Split-screen (text left, visual right).
+- **Feature sections:** Zig-zag alternating text+image rows. No 3-equal-columns.
+- **Mobile collapse:** All multi-column layouts collapse below 768px. No horizontal overflow.
+- **z-index contract:** base (0) / sticky-nav (100) / overlay (200) / modal (300) / toast (500).
 
-Base unit: **8px**
-- **xs**: 4px — Inline icon gaps
-- **sm**: 8px — Tight component padding
-- **md**: 16px — Default padding
-- **lg**: 24px — Card padding
-- **xl**: 32px — Panel gaps
-- **2xl**: 48px — Layout sections
-- **3xl**: 64px — Page-level spacing
+## Elevation & Depth
 
-## Border Radius
+Semi-circular timeline, segmented process arc, white simple glyphs inside colored segments, flat vector clean matte finish.
 
-Subtle radius for a medieval, angular feel.
-- **sm** (2px): Badges, inline tags
-- **DEFAULT** (4px): Buttons, cards, inputs
-- **md** (6px): Modals, dropdown panels
-- **lg** (8px): Inventory panels
-- **full** (9999px): Health orbs, status circles
+- **Physics:** Ease-out curves, 200-300ms duration. Smooth and predictable.
+- **Entry animations:** Fade + translate-Y (16px → 0) over 420ms ease-out. Staggered cascades for lists: 80ms between items.
+- **Hover states:** Subtle color shift + shadow adjustment over 200ms.
+- **Page transitions:** Fade only (200ms).
+- **Performance:** Only transform and opacity animated. No layout-triggering properties.
 
-## Elevation
+## Shapes
 
-Colored gold-glow shadows for an enchanted, ornate feel.
-- **sm**: 1px offset, 3px blur, #CA8A04 at 15%. Buttons, small items.
-- **DEFAULT**: 2px offset, 8px blur, #CA8A04 at 20%. Cards, panels.
-- **md**: 4px offset, 16px blur, #CA8A04 at 25%. Elevated panels.
-- **lg**: 8px offset, 32px blur, #CA8A04 at 30%. Modals, treasure UI.
-- **glow**: 20px glow #CA8A04 at 40%. Active/selected items.
+Base corner radius: 9999px. See rounded tokens in front matter for the full scale.
 
 ## Components
 
-### Buttons
-#### Variants
-- **Primary**: #CA8A04 fill, #1A0F0A text, 1px #DAA520 border, #B8780A fill.
-- **Secondary**: transparent fill, #CA8A04 text, 1px #CA8A04 border, #CA8A0415 fill.
-- **Ghost**: transparent fill, #BFA98A text, no border, #3D2517 fill.
-- **Destructive**: #991B1B fill, #F5E6D3 text, 1px #B91C1C border, #7F1D1D fill.
-#### Sizes
-Sizes: sm (6px 14px, 13px, 32px, 1px), md (8px 22px, 14px, 40px, 1px), lg (12px 30px, 16px, 48px, 1.5px).
-#### Disabled State
-0.35 opacity.
-- disabled cursor
-- Gold glow removed; border dims to #5C3D2E
----
-
-### Cards
-- **Default**: #2C1A10 fill, 1px #5C3D2E border, sm shadow, 4px radius.
-- **Elevated**: #3D2517 fill, 1px #CA8A0440 border, md shadow, 4px radius.
-** 24px **padding, ** optional 2px top border in #CA8A04 for quest/item headers **header accent, ** glow shadow fades in over 300ms **hover (elevated).
----
-
-### Inputs
-- **Default**: 1px #5C3D2E border, #2C1A10 fill, no shadow.
-- **Hover**: 1px #CA8A04 border, #2C1A10 fill, no shadow.
-- **Focus**: 2px #CA8A04 border, #2C1A10 fill, 3px ring #CA8A04 at 25% shadow.
-- **Error**: 2px #991B1B border, #2C1A10 fill, 3px ring #991B1B at 25% shadow.
-- **Disabled**: 1px #3D2517 border, #1A0F0A fill, no shadow.
-** 40px | **Padding:** 8px 12px | **Radius:** 4px **height, ** Spectral 14px/500, color #F5E6D3, bottom margin 6px **label, ** Spectral 12px/400, color #BFA98A, top margin 4px **helper text, ** Spectral 12px/400, color #991B1B, top margin 4px **error text.
----
-
-### Chips
-- **Filter**: #2C1A10 fill, #BFA98A text, 1px #5C3D2E border.
-- **Filter Active**: #CA8A04 fill, #1A0F0A text, no border.
-- **Status Success**: #22C55E20 fill, #22C55E text, no border.
-- **Status Warning**: #CA8A0420 fill, #CA8A04 text, no border.
-- **Status Error**: #991B1B20 fill, #F87171 text, no border.
-** 4px 12px | **Radius:** 2px | **Font:** Cinzel 11px/400, tracking 1px, uppercase **padding.
----
-
-### Lists
-** 48px **row height, ** 8px 16px **padding, ** 1px #3D2517 **divider, ** #3D2517 **hover background, ** #CA8A040D **active background, ** Spectral 16px/400 #F5E6D3 for label, 14px/400 #BFA98A for description **font, ** 28px with 12px right margin (item/quest icons) **leading icon area.
----
-
-### Checkboxes
-** 20px x 20px | **Radius:** 2px **size, ** border 2px #5C3D2E, background #2C1A10 **unchecked, ** background #CA8A04, border none, checkmark #1A0F0A **checked, ** background #CA8A04, dash #1A0F0A **indeterminate, ** 35% opacity, disabled cursor **disabled, ** 8px left of label text **label spacing.
----
-
-### Radio Buttons
-** 20px x 20px | **Radius:** full (circle) **size, ** border 2px #5C3D2E, background #2C1A10 **unchecked, ** border 2px #CA8A04, inner dot 10px #CA8A04 **selected, ** 35% opacity, disabled cursor **disabled, ** 8px left of label text **label spacing.
----
-
-### Tooltips
-** #3D2517 **background, ** #F5E6D3, Spectral 12px/400 **text, ** 1px #CA8A0440 **border, ** 8px 14px | **Radius:** 4px **padding, ** 6px triangle matching background **arrow, ** 260px **max width, ** 300ms show, 0ms hide **delay.
----
+- **Primary Button:** Rounded (50%) shape. Accent color fill. Hover: 8% darken + subtle lift shadow. Active: -1px translate tactile press. Font weight 600. No outer glows.
+- **Secondary / Ghost Button:** Outline variant. 1.5px border in muted color. Text in primary color. Hover: subtle background fill.
+- **Cards:** Rounded (50%) corners. Surface background. Subtle shadow (0 2px 12px rgba(0,0,0,0.06)). 1px border stroke.
+- **Inputs:** Label above input. 1px border stroke. Focus ring: 2px accent color offset 2px. Error text below in semantic red. No floating labels.
+- **Navigation:** Primary surface background. Active item: accent color indicator. Font weight 500 when active.
+- **Skeletons:** Shimmer animation matching component dimensions. No circular spinners.
+- **Empty States:** Icon-based composition with descriptive text and action button.
 
 ## Do's and Don'ts
 
-1. **Do** use Cinzel for all headings and UI labels to maintain the medieval, ornate character.
-2. **Do** apply the gold glow shadow to interactive elements in their active/selected state for a magical feel.
-3. **Do** use the dark brown palette (#1A0F0A, #2C1A10, #3D2517) for layered depth -- never pure black.
-4. **Don't** use modern, flat design patterns; QuestUI thrives on texture, borders, and layered surfaces.
-5. **Don't** mix in sans-serif fonts; the dual-serif stack (Cinzel + Spectral) is essential to the fantasy tone.
-6. **Do** leverage Royal Purple (#581C87) sparingly for rare, legendary, or magical elements.
-7. **Don't** use bright white (#FFFFFF) for text; #F5E6D3 parchment color ensures thematic consistency.
-8. **Do** add top-border accents in gold to signify important cards or quest headers.
-9. **Don't** over-animate UI transitions; subtle fades (300ms) are preferred to maintain gravitas.
-10. **Do** use uppercase letter-spaced text on chips and small labels for an inscribed, carved quality.
+- No emojis in UI — use icon system only (Lucide, Heroicons)
+- No pure black (#000000) — use off-black or charcoal variants
+- No oversaturated accent colors (saturation cap: 80%)
+- No 3-column equal-width feature layouts — use zig-zag or asymmetric grid
+- No `h-screen` — use `min-h-[100dvh]`
+- No AI copywriting clichés: "Elevate", "Seamless", "Unleash", "Next-Gen"
+- No broken external image links — use picsum.photos or inline SVG
+- No generic lorem ipsum in demos
+
+- Do Radial/Circular layout elements
+- Do Clean white background
+- Do Teal/Cyan color palette
+- Do Step-by-step process visualization
+- Do Simple glyph icons
+
+## Use Case
+
+Landing pages, Websites modernas

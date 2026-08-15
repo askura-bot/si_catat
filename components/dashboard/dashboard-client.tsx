@@ -11,6 +11,10 @@ import {
   ChevronDown,
   X,
   Pencil,
+  Wallet,
+  TrendingUp,
+  TrendingDown,
+  PiggyBank
 } from 'lucide-react';
 import { generateWhatsAppSummary } from '@/lib/whatsapp';
 import type { Period, PeriodSummary, Expense, Member, MemberIncomeSummary } from '@/types/database';
@@ -101,23 +105,27 @@ export function DashboardClient({
 
   // ── Header & Period Selector ──────────────────────────────────
   const HeaderSection = (
-    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
       <div>
-        <h2 className="font-[Cinzel] text-2xl font-bold text-[#CA8A04] tracking-wide">
-          Kas Kontrakan
+        <h2 className="text-2xl font-bold text-[#333333] tracking-tight">
+          Overview
         </h2>
+        <p className="text-sm text-[#6B7280]">
+          Ringkasan finansial dan riwayat transaksi
+        </p>
       </div>
-      <div className="relative">
+      <div className="relative shrink-0">
         <select
           value={currentPeriod.id}
           onChange={handlePeriodChange}
           className="
-            h-9 pl-3 pr-8
-            bg-[#2C1A10] text-[#F5E6D3]
-            border border-[#5C3D2E] rounded
-            font-[Spectral] text-sm font-medium
-            focus:border-[#CA8A04] focus:outline-none focus:ring-1 focus:ring-[#CA8A04]
-            appearance-none cursor-pointer
+            h-10 pl-4 pr-10
+            bg-[#FFFFFF] text-[#333333]
+            border border-[#D1D5DB] rounded-full
+            text-sm font-medium
+            focus:border-[#008B8B] focus:outline-none focus:ring-2 focus:ring-[#008B8B] focus:ring-offset-1
+            appearance-none cursor-pointer shadow-sm
+            transition-all duration-200
           "
         >
           {allPeriods.map((p) => (
@@ -126,44 +134,89 @@ export function DashboardClient({
             </option>
           ))}
         </select>
-        <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#CA8A04] pointer-events-none" />
+        <ChevronDown size={16} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#6B7280] pointer-events-none" />
       </div>
     </div>
   );
 
   // ── Summary Cards ────────────────────────────────────────────
   const SummarySection = (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
       {[
-        { id: 'carry_over', label: 'Saldo Awal', value: summary.carry_over, sub: currentPeriod.initial_balance !== null ? 'Manual override' : 'Bulan lalu' },
-        { id: 'income', label: 'Total Iuran', value: summary.total_income, sub: 'Masuk bulan ini' },
-        { id: 'expense', label: 'Total Pengeluaran', value: summary.total_expense, sub: 'Keluar bulan ini', isExpense: true },
+        { 
+          id: 'carry_over', 
+          label: 'Saldo Awal', 
+          value: summary.carry_over, 
+          sub: currentPeriod.initial_balance !== null ? 'Manual override' : 'Bulan lalu',
+          icon: Wallet,
+          color: '#20B2AA'
+        },
+        { 
+          id: 'income', 
+          label: 'Total Iuran', 
+          value: summary.total_income, 
+          sub: 'Masuk bulan ini',
+          icon: TrendingUp,
+          color: '#10B981'
+        },
+        { 
+          id: 'expense', 
+          label: 'Total Pengeluaran', 
+          value: summary.total_expense, 
+          sub: 'Keluar bulan ini', 
+          isExpense: true,
+          icon: TrendingDown,
+          color: '#EF4444'
+        },
       ].map((card) => (
-        <div key={card.label} className="bg-[#2C1A10] border border-[#5C3D2E] rounded px-4 py-3 shadow-[0_2px_8px_rgba(202,138,4,0.15)] relative group">
-          <div className="flex justify-between items-start">
-            <p className="font-[Cinzel] text-[10px] uppercase tracking-[1px] text-[#BFA98A] mb-1">{card.label}</p>
+        <div key={card.label} className="bg-[#FFFFFF] border border-[#E5E7EB] rounded-2xl p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] relative group overflow-hidden">
+          <div className="flex justify-between items-start mb-4">
+            <div className="flex items-center gap-3">
+              <div 
+                className="w-10 h-10 rounded-full flex items-center justify-center bg-opacity-10"
+                style={{ backgroundColor: `${card.color}15`, color: card.color }}
+              >
+                <card.icon size={20} strokeWidth={2.5} />
+              </div>
+              <p className="text-sm font-semibold text-[#6B7280]">{card.label}</p>
+            </div>
+            
             {isAdmin && card.id === 'carry_over' && (
               <button
                 onClick={() => setShowEditBalance(true)}
                 title="Atur Saldo Awal"
-                className="text-[#5C3D2E] hover:text-[#CA8A04] transition-colors cursor-pointer"
+                className="p-1.5 text-[#9CA3AF] hover:text-[#008B8B] hover:bg-[#F3F4F6] rounded-full transition-colors cursor-pointer"
               >
-                <Pencil size={12} />
+                <Pencil size={14} />
               </button>
             )}
           </div>
-          <p className={`font-[Fira_Code] text-lg font-semibold tabular-nums ${card.isExpense && card.value > 0 ? 'text-[#F87171]' : card.value < 0 ? 'text-[#F87171]' : 'text-[#F5E6D3]'}`}>
+          <p className={`font-mono text-2xl font-bold tracking-tight ${card.isExpense && card.value > 0 ? 'text-[#EF4444]' : card.value < 0 ? 'text-[#EF4444]' : 'text-[#333333]'}`}>
             {card.isExpense && card.value > 0 ? '-' : ''}{formatRupiah(Math.abs(card.value))}
           </p>
-          <p className="font-[Spectral] text-[11px] text-[#5C3D2E] mt-0.5">{card.sub}</p>
+          <p className="text-xs text-[#9CA3AF] mt-1 font-medium">{card.sub}</p>
         </div>
       ))}
-      <div className={`border-2 rounded px-4 py-3 shadow-[0_4px_16px_rgba(202,138,4,0.25)] ${summary.sisa_saldo >= 0 ? 'bg-[#2C1A10] border-[#CA8A04]/60' : 'bg-[#2C1A10] border-[#991B1B]/60'}`}>
-        <p className="font-[Cinzel] text-[10px] uppercase tracking-[1px] text-[#BFA98A] mb-1">💰 Sisa Saldo Kas</p>
-        <p className={`font-[Fira_Code] text-xl font-bold tabular-nums ${summary.sisa_saldo >= 0 ? 'text-[#22C55E]' : 'text-[#F87171]'}`}>
+      
+      {/* Sisa Saldo Card - Emphasized */}
+      <div className={`border-2 rounded-2xl p-5 shadow-[0_4px_20px_rgba(0,0,0,0.06)] relative overflow-hidden ${summary.sisa_saldo >= 0 ? 'bg-[#FFFFFF] border-[#008B8B]/40' : 'bg-[#FFFFFF] border-[#EF4444]/40'}`}>
+        <div className="absolute top-0 right-0 -mr-6 -mt-6 opacity-[0.03] pointer-events-none">
+          <PiggyBank size={120} />
+        </div>
+        <div className="flex justify-between items-start mb-4">
+          <div className="flex items-center gap-3">
+            <div 
+              className={`w-10 h-10 rounded-full flex items-center justify-center ${summary.sisa_saldo >= 0 ? 'bg-[#008B8B]/10 text-[#008B8B]' : 'bg-[#EF4444]/10 text-[#EF4444]'}`}
+            >
+              <PiggyBank size={20} strokeWidth={2.5} />
+            </div>
+            <p className="text-sm font-bold text-[#333333]">Sisa Saldo Kas</p>
+          </div>
+        </div>
+        <p className={`font-mono text-3xl font-extrabold tracking-tight ${summary.sisa_saldo >= 0 ? 'text-[#008B8B]' : 'text-[#EF4444]'}`}>
           {summary.sisa_saldo < 0 ? '-' : ''}{formatRupiah(Math.abs(summary.sisa_saldo))}
         </p>
-        <p className={`font-[Spectral] text-[11px] mt-0.5 ${summary.sisa_saldo >= 0 ? 'text-[#5C3D2E]' : 'text-[#F87171]'}`}>
+        <p className={`text-xs font-semibold mt-1 ${summary.sisa_saldo >= 0 ? 'text-[#008B8B]/70' : 'text-[#EF4444]/70'}`}>
           {summary.sisa_saldo >= 0 ? 'Tersedia saat ini' : '⚠ Defisit'}
         </p>
       </div>
@@ -172,12 +225,12 @@ export function DashboardClient({
 
   // ── Action Buttons ───────────────────────────────────────────
   const ActionButtons = (
-    <div className="flex flex-wrap items-center gap-2">
+    <div className="flex flex-wrap items-center gap-3">
       <button
         onClick={handleCopyWA}
-        className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#22C55E]/10 text-[#22C55E] border border-[#22C55E]/40 rounded font-[Cinzel] text-xs font-semibold uppercase tracking-wider hover:bg-[#22C55E]/20 transition-all cursor-pointer"
+        className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#FFFFFF] text-[#008B8B] border border-[#D1D5DB] rounded-full text-sm font-semibold transition-all duration-200 hover:bg-[#F3F4F6] hover:border-[#008B8B] active:translate-y-[1px] cursor-pointer shadow-sm"
       >
-        {copiedWA ? <Check size={14} /> : <Share2 size={14} />}
+        {copiedWA ? <Check size={16} /> : <Share2 size={16} />}
         {copiedWA ? 'Tersalin!' : 'Salin Rekap WA'}
       </button>
 
@@ -186,23 +239,23 @@ export function DashboardClient({
           <div className="flex-1 min-w-[20px]" />
           <button
             onClick={() => setShowIncomeModal(true)}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#CA8A04] text-[#1A0F0A] border border-[#DAA520] rounded font-[Cinzel] text-xs font-bold uppercase tracking-wider hover:bg-[#B8780A] transition-all cursor-pointer"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#008B8B] text-[#FFFFFF] rounded-full text-sm font-bold transition-all duration-200 hover:bg-[#007676] hover:shadow-md active:translate-y-[1px] cursor-pointer"
           >
-            <Coins size={14} />
-            + Iuran
+            <Coins size={16} />
+            Catat Iuran
           </button>
           <button
             onClick={() => setShowExpenseModal(true)}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#CA8A04]/10 text-[#CA8A04] border border-[#CA8A04]/40 rounded font-[Cinzel] text-xs font-semibold uppercase tracking-wider hover:bg-[#CA8A04]/20 transition-all cursor-pointer"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#FFFFFF] text-[#008B8B] border border-[#008B8B] rounded-full text-sm font-bold transition-all duration-200 hover:bg-[#008B8B]/5 hover:shadow-sm active:translate-y-[1px] cursor-pointer"
           >
-            <CreditCard size={14} />
-            + Pengeluaran
+            <CreditCard size={16} />
+            Pengeluaran
           </button>
           <button
             onClick={() => setShowManageModal(true)}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#3D2517] text-[#BFA98A] border border-[#5C3D2E] rounded font-[Cinzel] text-xs font-semibold uppercase tracking-wider hover:bg-[#5C3D2E] hover:text-[#F5E6D3] transition-all cursor-pointer"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#FFFFFF] text-[#4B5563] border border-[#D1D5DB] rounded-full text-sm font-semibold transition-all duration-200 hover:bg-[#F3F4F6] hover:text-[#111827] active:translate-y-[1px] cursor-pointer shadow-sm"
           >
-            <Users size={14} />
+            <Users size={16} />
             Kelola Anggota
           </button>
         </>
@@ -212,56 +265,65 @@ export function DashboardClient({
 
   // ── Tab Navigation ───────────────────────────────────────────
   const TabsSection = (
-    <div className="flex border-b border-[#3D2517]">
+    <div className="flex border-b border-[#E5E7EB] gap-8 px-4">
       <button
         onClick={() => setActiveTab('incomes')}
-        className={`flex-1 py-3 text-sm font-[Cinzel] font-semibold uppercase tracking-wider transition-colors ${activeTab === 'incomes' ? 'text-[#CA8A04] border-b-2 border-[#CA8A04]' : 'text-[#BFA98A] hover:text-[#F5E6D3]'}`}
+        className={`py-4 text-sm font-semibold transition-colors relative ${activeTab === 'incomes' ? 'text-[#008B8B]' : 'text-[#6B7280] hover:text-[#333333]'}`}
       >
         Iuran Anggota
+        {activeTab === 'incomes' && (
+          <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#008B8B] rounded-t-full animate-[fadeIn_200ms_ease-out]" />
+        )}
       </button>
       <button
         onClick={() => setActiveTab('expenses')}
-        className={`flex-1 py-3 text-sm font-[Cinzel] font-semibold uppercase tracking-wider transition-colors ${activeTab === 'expenses' ? 'text-[#CA8A04] border-b-2 border-[#CA8A04]' : 'text-[#BFA98A] hover:text-[#F5E6D3]'}`}
+        className={`py-4 text-sm font-semibold transition-colors relative ${activeTab === 'expenses' ? 'text-[#008B8B]' : 'text-[#6B7280] hover:text-[#333333]'}`}
       >
         Riwayat Pengeluaran
+        {activeTab === 'expenses' && (
+          <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#008B8B] rounded-t-full animate-[fadeIn_200ms_ease-out]" />
+        )}
       </button>
     </div>
   );
 
   // ── Tab Content: Incomes ─────────────────────────────────────
   const IncomesContent = (
-    <div className="bg-[#2C1A10] border border-[#5C3D2E] border-t-0 rounded-b shadow-[0_2px_8px_rgba(202,138,4,0.1)]">
+    <div className="bg-[#FFFFFF] border border-[#E5E7EB] border-t-0 rounded-b-2xl shadow-[0_2px_8px_rgba(0,0,0,0.02)] overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-[#3D2517]">
-              <th className="px-4 py-3 text-left font-[Cinzel] text-[11px] uppercase tracking-[1px] text-[#BFA98A]">Nama</th>
-              <th className="px-4 py-3 text-right font-[Cinzel] text-[11px] uppercase tracking-[1px] text-[#BFA98A]">Total Iuran Bulan Ini</th>
+            <tr className="bg-[#F8F9FA] border-b border-[#E5E7EB]">
+              <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-[#6B7280]">Nama Anggota</th>
+              <th className="px-6 py-4 text-right text-xs font-semibold uppercase tracking-wider text-[#6B7280]">Total Bulan Ini</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-[#F3F4F6]">
             {memberSummaries.length === 0 ? (
-              <tr><td colSpan={2} className="px-4 py-8 text-center font-[Spectral] text-sm text-[#5C3D2E] italic">Belum ada data anggota.</td></tr>
+              <tr><td colSpan={2} className="px-6 py-12 text-center text-sm text-[#9CA3AF] italic">Belum ada data anggota aktif.</td></tr>
             ) : (
               memberSummaries.map((m) => (
-                <tr key={m.member_id} className="border-b border-[#3D2517]/50 hover:bg-[#3D2517]/30 transition-colors group">
-                  <td className="px-4 py-3 font-[Spectral] text-sm text-[#F5E6D3] flex items-center gap-2">
+                <tr key={m.member_id} className="hover:bg-[#F8F9FA] transition-colors group">
+                  <td className="px-6 py-4 text-sm font-medium text-[#333333] flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-[#008B8B]/10 flex items-center justify-center text-[#008B8B] font-bold text-xs">
+                      {m.member_name.charAt(0).toUpperCase()}
+                    </div>
                     {m.member_name}
                     {isAdmin && (
                       <button
                         onClick={() => setSelectedMemberForHistory({ id: m.member_id, name: m.member_name })}
                         title="Edit Iuran Anggota"
-                        className="text-[#5C3D2E] opacity-0 group-hover:opacity-100 hover:text-[#CA8A04] transition-all cursor-pointer"
+                        className="p-1.5 ml-2 text-[#9CA3AF] opacity-0 group-hover:opacity-100 hover:text-[#008B8B] hover:bg-[#E5E7EB] rounded-full transition-all cursor-pointer"
                       >
-                        <Pencil size={12} />
+                        <Pencil size={14} />
                       </button>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-right font-[Fira_Code] text-sm text-[#F5E6D3] tabular-nums">
+                  <td className="px-6 py-4 text-right font-mono text-sm font-semibold tabular-nums">
                     {m.total_amount > 0 ? (
-                      <span className="text-[#22C55E]">{formatRupiah(m.total_amount)}</span>
+                      <span className="text-[#10B981]">{formatRupiah(m.total_amount)}</span>
                     ) : (
-                      <span className="text-[#5C3D2E]">Rp 0</span>
+                      <span className="text-[#9CA3AF]">Rp 0</span>
                     )}
                   </td>
                 </tr>
@@ -275,21 +337,23 @@ export function DashboardClient({
 
   // ── Tab Content: Expenses ────────────────────────────────────
   const ExpensesContent = (
-    <div className="bg-[#2C1A10] border border-[#5C3D2E] border-t-0 rounded-b shadow-[0_2px_8px_rgba(202,138,4,0.1)]">
+    <div className="bg-[#FFFFFF] border border-[#E5E7EB] border-t-0 rounded-b-2xl shadow-[0_2px_8px_rgba(0,0,0,0.02)] overflow-hidden">
       {expenses.length === 0 ? (
-        <div className="px-4 py-8 text-center font-[Spectral] text-sm text-[#5C3D2E] italic">
-          Belum ada pengeluaran bulan ini.
+        <div className="px-6 py-12 text-center text-sm text-[#9CA3AF] italic">
+          Belum ada riwayat pengeluaran bulan ini.
         </div>
       ) : (
-        <div className="divide-y divide-[#3D2517]/50">
+        <div className="divide-y divide-[#F3F4F6]">
           {expenses.map((tx) => (
-            <div key={tx.id} className="px-4 py-3 flex items-start justify-between gap-3 hover:bg-[#3D2517]/20 transition-colors">
-              <div className="flex-1 min-w-0">
-                <p className="font-[Spectral] text-sm font-medium text-[#F5E6D3] truncate">{tx.description}</p>
-                <p className="font-[Spectral] text-xs text-[#BFA98A] italic truncate">{formatDate(tx.date)}</p>
+            <div key={tx.id} className="px-6 py-4 flex items-center justify-between gap-4 hover:bg-[#F8F9FA] transition-colors">
+              <div className="flex-1 min-w-0 flex flex-col justify-center">
+                <p className="text-sm font-medium text-[#333333] truncate">{tx.description}</p>
+                <p className="text-xs text-[#9CA3AF] mt-0.5">{formatDate(tx.date)}</p>
               </div>
-              <div className="flex items-center gap-3 shrink-0">
-                <span className="font-[Fira_Code] text-sm text-[#F87171] tabular-nums">-{formatRupiah(tx.amount)}</span>
+              <div className="flex items-center gap-4 shrink-0">
+                <span className="font-mono text-sm font-semibold text-[#EF4444] tabular-nums">
+                  -{formatRupiah(tx.amount)}
+                </span>
                 {isAdmin && (
                   <button
                     onClick={async () => {
@@ -298,9 +362,10 @@ export function DashboardClient({
                         handleRefresh();
                       }
                     }}
-                    className="text-[#5C3D2E] hover:text-[#991B1B] transition-colors cursor-pointer"
+                    className="p-1.5 text-[#9CA3AF] hover:text-[#EF4444] hover:bg-[#FEE2E2] rounded-full transition-colors cursor-pointer"
+                    title="Hapus Pengeluaran"
                   >
-                    <X size={14} />
+                    <X size={16} />
                   </button>
                 )}
               </div>
@@ -317,7 +382,7 @@ export function DashboardClient({
         {HeaderSection}
         {SummarySection}
         {ActionButtons}
-        <div>
+        <div className="bg-[#FFFFFF] rounded-2xl border border-[#E5E7EB] shadow-sm pt-2">
           {TabsSection}
           {activeTab === 'incomes' ? IncomesContent : ExpensesContent}
         </div>

@@ -7,7 +7,7 @@ import { loginAction, logoutAction } from '@/actions/auth';
 // ============================================================
 // Si Catat — Login Modal & Admin Badge
 // Komponen UI autentikasi untuk header.
-// Mengikuti QuestUI design system (RPG / medieval theme).
+// Mengikuti Corporate Radial Process design system.
 // ============================================================
 
 interface AuthHeaderProps {
@@ -34,18 +34,18 @@ function LoginButton() {
         onClick={() => setIsOpen(true)}
         className="
           inline-flex items-center gap-2
-          px-4 py-2
+          px-5 py-2.5
           bg-transparent
-          text-[#CA8A04] 
-          border border-[#CA8A04]
-          rounded
-          font-[Cinzel] text-xs font-semibold uppercase tracking-wider
-          transition-all duration-300
-          hover:bg-[#CA8A04]/10 hover:shadow-[0_0_12px_rgba(202,138,4,0.25)]
+          text-[#008B8B] 
+          border-[1.5px] border-[#008B8B]
+          rounded-full
+          text-sm font-semibold
+          transition-all duration-200
+          hover:bg-[#008B8B]/5 active:translate-y-[1px]
           cursor-pointer
         "
       >
-        <Lock size={14} />
+        <Lock size={16} />
         Login Bendahara
       </button>
 
@@ -74,14 +74,14 @@ function AdminBadge() {
         className="
           inline-flex items-center gap-1.5
           px-3 py-1.5
-          bg-[#CA8A04]/15
-          text-[#CA8A04]
-          border border-[#CA8A04]/40
-          rounded-sm
-          font-[Cinzel] text-[11px] font-semibold uppercase tracking-[1px]
+          bg-[#008B8B]/10
+          text-[#008B8B]
+          border border-[#008B8B]/20
+          rounded-full
+          text-xs font-semibold
         "
       >
-        <ShieldCheck size={13} />
+        <ShieldCheck size={14} />
         Mode Admin
       </span>
 
@@ -91,19 +91,19 @@ function AdminBadge() {
         disabled={isPending}
         className="
           inline-flex items-center gap-1.5
-          px-3 py-1.5
+          px-4 py-2
           bg-transparent
-          text-[#BFA98A]
-          border border-[#5C3D2E]
-          rounded
-          font-[Cinzel] text-[11px] uppercase tracking-wider
-          transition-all duration-300
-          hover:bg-[#3D2517] hover:text-[#F5E6D3] hover:border-[#CA8A04]/40
-          disabled:opacity-35 disabled:cursor-not-allowed
+          text-[#333333]
+          border-[1.5px] border-[#E5E7EB]
+          rounded-full
+          text-sm font-medium
+          transition-all duration-200
+          hover:bg-[#F3F4F6] active:translate-y-[1px]
+          disabled:opacity-50 disabled:cursor-not-allowed
           cursor-pointer
         "
       >
-        <LogOut size={13} />
+        <LogOut size={16} />
         {isPending ? 'Keluar...' : 'Logout'}
       </button>
     </div>
@@ -155,33 +155,31 @@ function LoginModal({ onClose }: { onClose: () => void }) {
       className="
         fixed inset-0 z-50
         flex items-center justify-center
-        bg-black/70 backdrop-blur-sm
+        bg-[#333333]/40 backdrop-blur-sm
         animate-[fadeIn_200ms_ease-out]
       "
     >
       <div
         className="
           relative w-full max-w-sm mx-4
-          bg-[#2C1A10] border border-[#5C3D2E]
-          rounded-md
-          shadow-[0_8px_32px_rgba(202,138,4,0.3)]
-          animate-[slideUp_300ms_ease-out]
+          bg-[#FFFFFF] border border-[#E5E7EB]
+          rounded-[24px]
+          shadow-[0_8px_32px_rgba(0,0,0,0.08)]
+          animate-[slideUp_420ms_ease-out]
+          overflow-hidden
         "
       >
-        {/* Aksen gold di atas */}
-        <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#CA8A04] rounded-t-md" />
-
         {/* Header */}
         <div className="flex items-center justify-between px-6 pt-6 pb-2">
-          <h2 className="font-[Cinzel] text-lg font-bold text-[#CA8A04] flex items-center gap-2">
-            <Lock size={18} />
+          <h2 className="text-xl font-bold text-[#333333] flex items-center gap-2">
+            <Lock className="text-[#008B8B]" size={20} />
             Login Bendahara
           </h2>
           <button
             onClick={onClose}
             className="
-              p-1 text-[#BFA98A] rounded
-              hover:bg-[#3D2517] hover:text-[#F5E6D3]
+              p-1.5 text-[#6B7280] rounded-full
+              hover:bg-[#F3F4F6] hover:text-[#333333]
               transition-colors duration-200
               cursor-pointer
             "
@@ -192,17 +190,17 @@ function LoginModal({ onClose }: { onClose: () => void }) {
         </div>
 
         {/* Deskripsi */}
-        <p className="px-6 pb-4 font-[Spectral] text-sm text-[#BFA98A]">
+        <p className="px-6 pb-6 text-sm text-[#6B7280]">
           Masukkan password admin untuk mengelola data kas kontrakan.
         </p>
 
         {/* Form */}
-        <form action={formAction} className="px-6 pb-6 space-y-4">
+        <form action={formAction} className="px-6 pb-6 space-y-5">
           {/* Input password */}
           <div>
             <label
               htmlFor="admin-password"
-              className="block font-[Spectral] text-sm font-medium text-[#F5E6D3] mb-1.5"
+              className="block text-sm font-medium text-[#333333] mb-1.5"
             >
               Password
             </label>
@@ -216,12 +214,12 @@ function LoginModal({ onClose }: { onClose: () => void }) {
                 required
                 placeholder="Masukkan password..."
                 className="
-                  w-full h-10 px-3 pr-10
-                  bg-[#2C1A10] text-[#F5E6D3]
-                  border border-[#5C3D2E] rounded
-                  font-[Spectral] text-sm
-                  placeholder:text-[#5C3D2E]
-                  focus:border-[#CA8A04] focus:ring-2 focus:ring-[#CA8A04]/25 focus:outline-none
+                  w-full h-11 px-4 pr-10
+                  bg-[#FFFFFF] text-[#333333]
+                  border border-[#D1D5DB] rounded-xl
+                  text-sm
+                  placeholder:text-[#9CA3AF]
+                  focus:border-[#008B8B] focus:ring-2 focus:ring-[#008B8B] focus:ring-offset-1 focus:outline-none
                   transition-all duration-200
                 "
               />
@@ -229,15 +227,15 @@ function LoginModal({ onClose }: { onClose: () => void }) {
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="
-                  absolute right-2 top-1/2 -translate-y-1/2
-                  p-1 text-[#5C3D2E]
-                  hover:text-[#BFA98A]
+                  absolute right-3 top-1/2 -translate-y-1/2
+                  p-1 text-[#9CA3AF]
+                  hover:text-[#6B7280]
                   transition-colors duration-200
                   cursor-pointer
                 "
                 aria-label={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}
               >
-                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
           </div>
@@ -246,11 +244,11 @@ function LoginModal({ onClose }: { onClose: () => void }) {
           {state?.error && (
             <div
               className="
-                px-3 py-2
-                bg-[#991B1B]/15
-                border border-[#991B1B]/30
-                rounded
-                font-[Spectral] text-xs text-[#F87171]
+                px-4 py-3
+                bg-[#FEF2F2]
+                border border-[#FCA5A5]
+                rounded-xl
+                text-sm text-[#EF4444]
               "
             >
               {state.error}
@@ -262,27 +260,26 @@ function LoginModal({ onClose }: { onClose: () => void }) {
             type="submit"
             disabled={isPending}
             className="
-              w-full h-10
+              w-full h-11
               flex items-center justify-center gap-2
-              bg-[#CA8A04] text-[#1A0F0A]
-              border border-[#DAA520]
-              rounded
-              font-[Cinzel] text-sm font-bold uppercase tracking-wider
-              transition-all duration-300
-              hover:bg-[#B8780A]
-              hover:shadow-[0_0_16px_rgba(202,138,4,0.4)]
-              disabled:opacity-35 disabled:cursor-not-allowed
+              bg-[#008B8B] text-[#FFFFFF]
+              rounded-full
+              text-sm font-bold
+              transition-all duration-200
+              hover:bg-[#007676] hover:shadow-md
+              active:translate-y-[1px]
+              disabled:opacity-50 disabled:cursor-not-allowed
               cursor-pointer
             "
           >
             {isPending ? (
               <>
-                <span className="inline-block w-4 h-4 border-2 border-[#1A0F0A]/30 border-t-[#1A0F0A] rounded-full animate-spin" />
+                <span className="inline-block w-4 h-4 border-2 border-[#FFFFFF]/30 border-t-[#FFFFFF] rounded-full animate-spin" />
                 Memverifikasi...
               </>
             ) : (
               <>
-                <ShieldCheck size={16} />
+                <ShieldCheck size={18} />
                 Masuk
               </>
             )}

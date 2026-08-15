@@ -1,20 +1,19 @@
 import type { Metadata } from "next";
-import { Cinzel, Spectral } from "next/font/google";
+import { Open_Sans, JetBrains_Mono } from "next/font/google";
 import { AuthHeader } from "@/components/auth/auth-header";
 import { checkIsAdmin } from "@/lib/auth";
 import "./globals.css";
 
-const cinzel = Cinzel({
-  variable: "--font-cinzel",
+const openSans = Open_Sans({
+  variable: "--font-open-sans",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
 
-const spectral = Spectral({
-  variable: "--font-spectral",
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  style: ["normal", "italic"],
+  weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
@@ -29,16 +28,16 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="id"
-      className={`${cinzel.variable} ${spectral.variable} h-full`}
+      className={`${openSans.variable} ${jetbrainsMono.variable} h-full`}
     >
-      <body className="min-h-full flex flex-col bg-[#1A0F0A] text-[#F5E6D3] antialiased">
+      <body className="min-h-[100dvh] flex flex-col bg-[#FFFFFF] text-[#333333] antialiased">
         {/* ── Header ──────────────────────────────────── */}
-        <header className="sticky top-0 z-40 border-b border-[#5C3D2E] bg-[#2C1A10]/95 backdrop-blur-sm">
-          <div className="mx-auto max-w-4xl flex items-center justify-between px-4 py-3">
+        <header className="sticky top-0 z-40 border-b border-[#E5E7EB] bg-[#FFFFFF]/95 backdrop-blur-sm shadow-sm">
+          <div className="mx-auto max-w-[1280px] w-full flex items-center justify-between px-6 py-3">
             {/* Logo / App Name */}
             <div className="flex items-center gap-2">
-              <span className="text-xl">📒</span>
-              <h1 className="font-[Cinzel] text-lg font-bold text-[#CA8A04] tracking-wide">
+              <span className="text-xl">📊</span>
+              <h1 className="font-bold text-[#008B8B] tracking-tight text-lg">
                 Si Catat
               </h1>
             </div>
@@ -49,13 +48,13 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         </header>
 
         {/* ── Main Content ────────────────────────────── */}
-        <main className="flex-1 mx-auto w-full max-w-4xl px-4 py-6">
+        <main className="flex-1 mx-auto w-full max-w-[1280px] px-6 py-8">
           {children}
         </main>
 
         {/* ── Footer ──────────────────────────────────── */}
-        <footer className="border-t border-[#3D2517] py-4 text-center">
-          <p className="font-[Spectral] text-xs text-[#5C3D2E]">
+        <footer className="border-t border-[#E5E7EB] py-6 text-center bg-[#F8F9FA]">
+          <p className="text-sm text-[#6B7280]">
             Si Catat &copy; {new Date().getFullYear()} — Kas Kontrakan
           </p>
         </footer>

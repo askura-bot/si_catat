@@ -52,47 +52,45 @@ export function ExpenseModal({ periodId, onClose, onSuccess }: ExpenseModalProps
     <div
       ref={overlayRef}
       onClick={handleOverlayClick}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm animate-[fadeIn_200ms_ease-out]"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#333333]/40 backdrop-blur-sm animate-[fadeIn_200ms_ease-out] p-4"
     >
-      <div className="relative w-full max-w-md mx-4 bg-[#2C1A10] border border-[#5C3D2E] rounded-md shadow-[0_8px_32px_rgba(202,138,4,0.3)] animate-[slideUp_300ms_ease-out]">
-        <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#CA8A04] rounded-t-md" />
-
-        <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-[#3D2517]">
-          <h2 className="font-[Cinzel] text-lg font-bold text-[#CA8A04] flex items-center gap-2">
-            <CreditCard size={18} />
+      <div className="relative w-full max-w-md bg-[#FFFFFF] border border-[#E5E7EB] rounded-[24px] shadow-[0_8px_32px_rgba(0,0,0,0.08)] animate-[slideUp_420ms_ease-out] overflow-hidden">
+        <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-[#E5E7EB]">
+          <h2 className="text-xl font-bold text-[#333333] flex items-center gap-2">
+            <CreditCard className="text-[#008B8B]" size={20} />
             Catat Pengeluaran
           </h2>
           <button
             onClick={onClose}
-            className="p-1 text-[#BFA98A] rounded hover:bg-[#3D2517] hover:text-[#F5E6D3] transition-colors cursor-pointer"
+            className="p-1.5 text-[#6B7280] rounded-full hover:bg-[#F3F4F6] hover:text-[#333333] transition-colors cursor-pointer"
           >
             <X size={18} />
           </button>
         </div>
 
-        <form action={formAction} className="p-6 space-y-4">
+        <form action={formAction} className="p-6 space-y-5">
           <input type="hidden" name="period_id" value={periodId} />
 
-          <div className="space-y-3">
+          <div className="space-y-4">
             <div>
-              <label className="block font-[Spectral] text-sm font-medium text-[#F5E6D3] mb-1">
-                <StickyNote size={14} className="inline mr-1" /> Keterangan
+              <label className="block text-sm font-medium text-[#333333] mb-1.5 flex items-center gap-1.5">
+                <StickyNote size={16} className="text-[#6B7280]" /> Keterangan
               </label>
               <input
                 name="description"
                 type="text"
                 required
                 placeholder="Token listrik, air..."
-                className="w-full h-10 px-3 bg-[#2C1A10] text-[#F5E6D3] border border-[#5C3D2E] rounded font-[Spectral] text-sm focus:border-[#CA8A04] focus:ring-2 focus:ring-[#CA8A04]/25 focus:outline-none"
+                className="w-full h-11 px-4 bg-[#FFFFFF] text-[#333333] border border-[#D1D5DB] rounded-xl text-sm focus:border-[#008B8B] focus:ring-2 focus:ring-[#008B8B] focus:ring-offset-1 focus:outline-none placeholder:text-[#9CA3AF]"
               />
             </div>
 
             <div>
-              <label className="block font-[Spectral] text-sm font-medium text-[#F5E6D3] mb-1">
+              <label className="block text-sm font-medium text-[#333333] mb-1.5">
                 Nominal (Rp)
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 font-[Spectral] text-sm text-[#5C3D2E]">Rp</span>
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 font-mono text-sm font-medium text-[#6B7280]">Rp</span>
                 <input
                   name="amount"
                   type="text"
@@ -101,26 +99,26 @@ export function ExpenseModal({ periodId, onClose, onSuccess }: ExpenseModalProps
                   placeholder="50.000"
                   value={amountDisplay}
                   onChange={(e) => setAmountDisplay(formatThousands(e.target.value))}
-                  className="w-full h-10 pl-9 pr-3 bg-[#2C1A10] text-[#F5E6D3] border border-[#5C3D2E] rounded font-[Fira_Code] text-sm focus:border-[#CA8A04] focus:ring-2 focus:ring-[#CA8A04]/25 focus:outline-none"
+                  className="w-full h-11 pl-10 pr-4 bg-[#FFFFFF] text-[#333333] border border-[#D1D5DB] rounded-xl font-mono text-sm font-semibold focus:border-[#008B8B] focus:ring-2 focus:ring-[#008B8B] focus:ring-offset-1 focus:outline-none placeholder:font-sans placeholder:font-normal placeholder:text-[#9CA3AF]"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block font-[Spectral] text-sm font-medium text-[#F5E6D3] mb-1">
-                <Calendar size={14} className="inline mr-1" /> Tanggal
+              <label className="block text-sm font-medium text-[#333333] mb-1.5 flex items-center gap-1.5">
+                <Calendar size={16} className="text-[#6B7280]" /> Tanggal
               </label>
               <input
                 name="date"
                 type="date"
                 defaultValue={todayISO()}
-                className="w-full h-10 px-3 bg-[#2C1A10] text-[#F5E6D3] border border-[#5C3D2E] rounded font-[Spectral] text-sm focus:border-[#CA8A04] focus:ring-2 focus:ring-[#CA8A04]/25 focus:outline-none [color-scheme:dark]"
+                className="w-full h-11 px-4 bg-[#FFFFFF] text-[#333333] border border-[#D1D5DB] rounded-xl text-sm focus:border-[#008B8B] focus:ring-2 focus:ring-[#008B8B] focus:ring-offset-1 focus:outline-none"
               />
             </div>
           </div>
 
           {state?.error && (
-            <div className="px-3 py-2 bg-[#991B1B]/15 border border-[#991B1B]/30 rounded font-[Spectral] text-xs text-[#F87171]">
+            <div className="px-4 py-3 bg-[#FEF2F2] border border-[#FCA5A5] rounded-xl text-sm text-[#EF4444]">
               {state.error}
             </div>
           )}
@@ -129,7 +127,7 @@ export function ExpenseModal({ periodId, onClose, onSuccess }: ExpenseModalProps
             <button
               type="submit"
               disabled={isPending}
-              className="w-full h-10 flex items-center justify-center gap-2 bg-[#CA8A04] text-[#1A0F0A] border border-[#DAA520] rounded font-[Cinzel] text-sm font-bold uppercase tracking-wider hover:bg-[#B8780A] disabled:opacity-35 cursor-pointer"
+              className="w-full h-11 flex items-center justify-center gap-2 bg-[#008B8B] text-[#FFFFFF] rounded-full text-sm font-bold transition-all duration-200 hover:bg-[#007676] hover:shadow-md active:translate-y-[1px] disabled:opacity-50 cursor-pointer"
             >
               {isPending ? 'Menyimpan...' : 'Simpan Pengeluaran'}
             </button>

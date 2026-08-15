@@ -1,46 +1,48 @@
 @import "tailwindcss";
 
 /* ============================================================
-   Si Catat — QuestUI Design System (Global Styles)
-   Fantasy RPG-inspired theme: golds, deep browns, parchment
+   Si Catat — Corporate Radial Process Design System
+   Clean, modern, data-visualization focused
    ============================================================ */
 
 :root {
-  /* QuestUI Color Palette */
-  --gold-primary: #CA8A04;
-  --red-secondary: #991B1B;
-  --purple-tertiary: #581C87;
-  --bg-page: #1A0F0A;
-  --bg-surface: #2C1A10;
-  --bg-elevated: #3D2517;
-  --border-default: #5C3D2E;
-  --border-gold: #DAA520;
-  --text-parchment: #F5E6D3;
-  --text-muted: #BFA98A;
-  --success: #22C55E;
-  --warning: #CA8A04;
-  --error: #991B1B;
-  --info: #581C87;
+  /* Corporate Palette */
+  --bg-primary: #FFFFFF;
+  --bg-surface: #F8F9FA; /* A subtle off-white for cards/modals if needed */
+  --text-primary: #333333;
+  --text-muted: #6B7280;
+  
+  --accent: #008B8B; /* Teal/Cyan */
+  --accent-hover: #007676; /* Darken for hover */
+  --segment-2: #20B2AA;
+  --segment-3: #48D1CC;
+  
+  --border-default: #E5E7EB;
+  
+  /* Semantic Colors */
+  --success: #10B981;
+  --warning: #F59E0B;
+  --error: #EF4444;
 
-  --background: var(--bg-page);
-  --foreground: var(--text-parchment);
+  --background: var(--bg-primary);
+  --foreground: var(--text-primary);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-open-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, monospace;
 
-  /* QuestUI custom keyframes for Tailwind v4 */
+  /* Custom Animations */
   --animate-fade-in: fadeIn 200ms ease-out;
-  --animate-slide-up: slideUp 300ms ease-out;
+  --animate-slide-up: slideUp 420ms ease-out;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: 'Spectral', Georgia, serif;
+  font-family: var(--font-sans);
 }
 
 /* ============================================================
@@ -54,11 +56,11 @@ body {
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(16px) scale(0.97);
+    transform: translateY(16px);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
   }
 }
 
@@ -67,21 +69,21 @@ body {
 }
 
 /* ============================================================
-   Scrollbar styling (QuestUI theme)
+   Scrollbar styling
    ============================================================ */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-page);
+  background: #F3F4F6;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-default);
-  border-radius: 4px;
+  background: #D1D5DB;
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--gold-primary);
+  background: var(--accent);
 }

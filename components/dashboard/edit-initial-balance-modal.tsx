@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { X, Save, RotateCcw } from 'lucide-react';
+import { X, Save, RotateCcw, Wallet } from 'lucide-react';
 import { updateInitialBalance } from '@/actions/cashflow';
 
 interface EditInitialBalanceModalProps {
@@ -83,30 +83,29 @@ export function EditInitialBalanceModal({
     <div
       ref={overlayRef}
       onClick={handleOverlayClick}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm animate-[fadeIn_200ms_ease-out] p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#333333]/40 backdrop-blur-sm animate-[fadeIn_200ms_ease-out] p-4"
     >
-      <div className="relative w-full max-w-sm bg-[#2C1A10] border border-[#5C3D2E] rounded-md shadow-[0_8px_32px_rgba(202,138,4,0.3)] animate-[slideUp_300ms_ease-out] flex flex-col">
-        <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#CA8A04] rounded-t-md" />
-
-        <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-[#3D2517]">
-          <h2 className="font-[Cinzel] text-lg font-bold text-[#CA8A04]">
+      <div className="relative w-full max-w-sm bg-[#FFFFFF] border border-[#E5E7EB] rounded-[24px] shadow-[0_8px_32px_rgba(0,0,0,0.08)] animate-[slideUp_420ms_ease-out] flex flex-col overflow-hidden">
+        <div className="flex items-center justify-between px-6 pt-6 pb-2">
+          <h2 className="text-xl font-bold text-[#333333] flex items-center gap-2">
+            <Wallet className="text-[#008B8B]" size={20} />
             Atur Saldo Awal
           </h2>
           <button
             onClick={onClose}
-            className="p-1 text-[#BFA98A] rounded hover:bg-[#3D2517] hover:text-[#F5E6D3] transition-colors cursor-pointer"
+            className="p-1.5 text-[#6B7280] rounded-full hover:bg-[#F3F4F6] hover:text-[#333333] transition-colors cursor-pointer"
           >
             <X size={18} />
           </button>
         </div>
 
-        <div className="p-6 space-y-4">
-          <p className="font-[Spectral] text-sm text-[#F5E6D3]">
+        <div className="p-6 space-y-5">
+          <p className="text-sm text-[#6B7280]">
             Isi nominal di bawah jika Anda ingin menentukan Saldo Awal secara manual. Kosongkan untuk menghitung otomatis dari bulan lalu.
           </p>
 
           <div>
-            <label className="block font-[Spectral] text-sm text-[#BFA98A] mb-1.5">
+            <label className="block text-sm font-medium text-[#333333] mb-1.5">
               Nominal (Bisa Minus)
             </label>
             <input
@@ -114,30 +113,30 @@ export function EditInitialBalanceModal({
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               placeholder="Contoh: -50000 atau 150000"
-              className="w-full h-10 px-3 bg-[#1A0F0A] text-[#F5E6D3] border border-[#5C3D2E] rounded font-[Fira_Code] text-sm focus:border-[#CA8A04] focus:outline-none"
+              className="w-full h-11 px-4 bg-[#FFFFFF] text-[#333333] border border-[#D1D5DB] rounded-xl font-mono text-sm focus:border-[#008B8B] focus:ring-2 focus:ring-[#008B8B] focus:ring-offset-1 focus:outline-none placeholder:font-sans placeholder:text-[#9CA3AF]"
             />
           </div>
 
           {errorMsg && (
-            <div className="text-sm font-[Spectral] text-[#F87171] bg-[#F87171]/10 px-3 py-2 rounded">
+            <div className="text-sm text-[#EF4444] bg-[#FEF2F2] border border-[#FCA5A5] px-4 py-3 rounded-xl">
               {errorMsg}
             </div>
           )}
 
-          <div className="flex flex-col gap-2 pt-2">
+          <div className="flex flex-col gap-3 pt-2">
             <button
               onClick={handleSave}
               disabled={isPending}
-              className="w-full flex items-center justify-center gap-2 h-10 bg-[#CA8A04] text-[#1A0F0A] border border-[#DAA520] rounded font-[Cinzel] text-sm font-bold uppercase tracking-wider hover:bg-[#B8780A] transition-colors disabled:opacity-50 cursor-pointer"
+              className="w-full flex items-center justify-center gap-2 h-11 bg-[#008B8B] text-[#FFFFFF] rounded-full text-sm font-bold transition-all duration-200 hover:bg-[#007676] hover:shadow-md active:translate-y-[1px] disabled:opacity-50 cursor-pointer"
             >
-              <Save size={16} /> Simpan
+              <Save size={18} /> Simpan
             </button>
             <button
               onClick={handleResetAuto}
               disabled={isPending || currentValue === null}
-              className="w-full flex items-center justify-center gap-2 h-10 bg-[#2C1A10] text-[#BFA98A] border border-[#3D2517] rounded font-[Cinzel] text-xs font-semibold uppercase tracking-wider hover:bg-[#3D2517] hover:text-[#F5E6D3] transition-colors disabled:opacity-30 cursor-pointer"
+              className="w-full flex items-center justify-center gap-2 h-11 bg-[#FFFFFF] text-[#4B5563] border border-[#D1D5DB] rounded-full text-sm font-semibold transition-all duration-200 hover:bg-[#F3F4F6] hover:text-[#111827] active:translate-y-[1px] disabled:opacity-30 cursor-pointer"
             >
-              <RotateCcw size={14} /> Kembalikan ke Otomatis
+              <RotateCcw size={16} /> Kembalikan ke Otomatis
             </button>
           </div>
         </div>

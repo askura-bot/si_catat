@@ -1,69 +1,170 @@
-import Image from "next/image";
+import { checkIsAdmin } from '@/lib/auth';
+import { getOrCreateCurrentPeriod, getCurrentPeriodSummary, getMonthName } from '@/actions/cashflow';
+import { getMembersWithTotalPaid } from '@/actions/incomes';
+import { getAllMembers, getActiveMembers } from '@/actions/members';
+import { MemberList } from '@/components/members/member-list';
+import { IncomeSection } from '@/components/incomes/income-section';
 
-export default function Home() {
+// ============================================================
+// Si Catat — Dashboard Utama
+// Server Component: data di-fetch di server, lalu dikirim ke
+// client components sebagai props.
+// ============================================================
+
+export default async function Home() {
+  const isAdmin = await checkIsAdmin();
+  const period = await getOrCreateCurrentPeriod();
+  const summary = await getCurrentPeriodSummary();
+  const memberSummaries = await getMembersWithTotalPaid(period.id);
+  const allMembers = await getAllMembers();
+  const activeMembers = await getActiveMembers();
+
+  const monthLabel = `${await getMonthName(period.month)} ${period.year}`;
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="space-y-6">
+      {/* ── Judul Periode ──────────────────────────── */}
+      <div className="text-center">
+        <h2 className="font-[Cinzel] text-2xl font-bold text-[#CA8A04] tracking-wide">
+          Kas Kontrakan
+        </h2>
+        <p className="font-[Spectral] text-sm text-[#BFA98A] mt-1">
+          Periode: {monthLabel}
+        </p>
+      </div>
+
+      {/* ── Kartu Ringkasan Finansial ──────────────── */}
+      <SummaryCards summary={summary} />
+
+      {/* ── Tabel Iuran Anggota ────────────────────── */}
+      <MemberList
+        members={memberSummaries}
+        allMembers={allMembers}
+        isAdmin={isAdmin}
+      />
+
+      {/* ── Input & Riwayat Iuran ──────────────────── */}
+      <IncomeSection
+        periodId={period.id}
+        activeMembers={activeMembers}
+        isAdmin={isAdmin}
+      />
+    </div>
+  );
+}
+
+// ============================================================
+// SummaryCards: Kartu-kartu ringkasan keuangan
+// ============================================================
+
+function formatRupiah(amount: number): string {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(amount);
+}
+
+interface SummaryCardsProps {
+  summary: {
+    carry_over: number;
+    total_income: number;
+    total_kas_masuk: number;
+    total_expense: number;
+    sisa_saldo: number;
+  };
+}
+
+function SummaryCards({ summary }: SummaryCardsProps) {
+  const cards = [
+    {
+      label: 'Saldo Awal',
+      value: summary.carry_over,
+      sublabel: 'Sisa bulan lalu',
+    },
+    {
+      label: 'Iuran Masuk',
+      value: summary.total_income,
+      sublabel: 'Bulan ini',
+    },
+    {
+      label: 'Total Kas Masuk',
+      value: summary.total_kas_masuk,
+      sublabel: 'Saldo awal + iuran',
+    },
+    {
+      label: 'Total Pengeluaran',
+      value: summary.total_expense,
+      sublabel: 'Bulan ini',
+      isExpense: true,
+    },
+  ];
+
+  return (
+    <div className="space-y-3">
+      {/* Grid kartu */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        {cards.map((card) => (
+          <div
+            key={card.label}
+            className="
+              bg-[#2C1A10] border border-[#5C3D2E] rounded
+              px-4 py-3
+              shadow-[0_2px_8px_rgba(202,138,4,0.15)]
+            "
+          >
+            <p className="font-[Cinzel] text-[10px] uppercase tracking-[1px] text-[#BFA98A] mb-1">
+              {card.label}
+            </p>
+            <p
+              className={`font-[Fira_Code] text-lg font-semibold tabular-nums ${
+                card.isExpense && card.value > 0
+                  ? 'text-[#F87171]'
+                  : card.value < 0
+                    ? 'text-[#F87171]'
+                    : 'text-[#F5E6D3]'
+              }`}
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+              {card.isExpense && card.value > 0 ? '-' : ''}
+              {formatRupiah(Math.abs(card.value))}
+            </p>
+            <p className="font-[Spectral] text-[11px] text-[#5C3D2E] mt-0.5">
+              {card.sublabel}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      {/* Kartu Sisa Saldo (highlight) */}
+      <div
+        className={`
+          border-2 rounded px-4 py-4 text-center
+          shadow-[0_4px_16px_rgba(202,138,4,0.25)]
+          ${
+            summary.sisa_saldo >= 0
+              ? 'bg-[#2C1A10] border-[#CA8A04]/60'
+              : 'bg-[#2C1A10] border-[#991B1B]/60'
+          }
+        `}
+      >
+        <p className="font-[Cinzel] text-[11px] uppercase tracking-[1.5px] text-[#BFA98A] mb-1">
+          💰 Sisa Saldo Kas
+        </p>
+        <p
+          className={`font-[Fira_Code] text-2xl font-bold tabular-nums ${
+            summary.sisa_saldo >= 0 ? 'text-[#22C55E]' : 'text-[#F87171]'
+          }`}
+        >
+          {summary.sisa_saldo < 0 ? '-' : ''}
+          {formatRupiah(Math.abs(summary.sisa_saldo))}
+        </p>
+        {summary.sisa_saldo < 0 && (
+          <p className="font-[Spectral] text-xs text-[#F87171] mt-1">
+            ⚠ Saldo defisit — akan terbawa ke bulan berikutnya
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+        )}
+      </div>
     </div>
   );
 }

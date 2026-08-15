@@ -1,8 +1,29 @@
 @import "tailwindcss";
 
+/* ============================================================
+   Si Catat — QuestUI Design System (Global Styles)
+   Fantasy RPG-inspired theme: golds, deep browns, parchment
+   ============================================================ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* QuestUI Color Palette */
+  --gold-primary: #CA8A04;
+  --red-secondary: #991B1B;
+  --purple-tertiary: #581C87;
+  --bg-page: #1A0F0A;
+  --bg-surface: #2C1A10;
+  --bg-elevated: #3D2517;
+  --border-default: #5C3D2E;
+  --border-gold: #DAA520;
+  --text-parchment: #F5E6D3;
+  --text-muted: #BFA98A;
+  --success: #22C55E;
+  --warning: #CA8A04;
+  --error: #991B1B;
+  --info: #581C87;
+
+  --background: var(--bg-page);
+  --foreground: var(--text-parchment);
 }
 
 @theme inline {
@@ -10,17 +31,57 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* QuestUI custom keyframes for Tailwind v4 */
+  --animate-fade-in: fadeIn 200ms ease-out;
+  --animate-slide-up: slideUp 300ms ease-out;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Spectral', Georgia, serif;
+}
+
+/* ============================================================
+   Keyframe Animations
+   ============================================================ */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================================
+   Scrollbar styling (QuestUI theme)
+   ============================================================ */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-page);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold-primary);
 }

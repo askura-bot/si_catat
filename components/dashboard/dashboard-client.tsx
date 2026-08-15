@@ -228,7 +228,7 @@ export function DashboardClient({
     <div className="flex flex-wrap items-center gap-3">
       <button
         onClick={handleCopyWA}
-        className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#FFFFFF] text-[#008B8B] border border-[#D1D5DB] rounded-full text-sm font-semibold transition-all duration-200 hover:bg-[#F3F4F6] hover:border-[#008B8B] active:translate-y-[1px] cursor-pointer shadow-sm"
+        className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#FFFFFF] text-[#008B8B] border border-[#D1D5DB] rounded-full text-sm font-semibold transition-all duration-200 hover:bg-[#F3F4F6] hover:border-[#008B8B] active:translate-y-px cursor-pointer shadow-sm"
       >
         {copiedWA ? <Check size={16} /> : <Share2 size={16} />}
         {copiedWA ? 'Tersalin!' : 'Salin Rekap WA'}
@@ -236,24 +236,24 @@ export function DashboardClient({
 
       {isAdmin && (
         <>
-          <div className="flex-1 min-w-[20px]" />
+          <div className="flex-1 min-w-5" />
           <button
             onClick={() => setShowIncomeModal(true)}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#008B8B] text-[#FFFFFF] rounded-full text-sm font-bold transition-all duration-200 hover:bg-[#007676] hover:shadow-md active:translate-y-[1px] cursor-pointer"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#008B8B] text-[#FFFFFF] rounded-full text-sm font-bold transition-all duration-200 hover:bg-[#007676] hover:shadow-md active:translate-y-px cursor-pointer"
           >
             <Coins size={16} />
             Catat Iuran
           </button>
           <button
             onClick={() => setShowExpenseModal(true)}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#FFFFFF] text-[#008B8B] border border-[#008B8B] rounded-full text-sm font-bold transition-all duration-200 hover:bg-[#008B8B]/5 hover:shadow-sm active:translate-y-[1px] cursor-pointer"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#FFFFFF] text-[#008B8B] border border-[#008B8B] rounded-full text-sm font-bold transition-all duration-200 hover:bg-[#008B8B]/5 hover:shadow-sm active:translate-y-px cursor-pointer"
           >
             <CreditCard size={16} />
             Pengeluaran
           </button>
           <button
             onClick={() => setShowManageModal(true)}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#FFFFFF] text-[#4B5563] border border-[#D1D5DB] rounded-full text-sm font-semibold transition-all duration-200 hover:bg-[#F3F4F6] hover:text-[#111827] active:translate-y-[1px] cursor-pointer shadow-sm"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#FFFFFF] text-[#4B5563] border border-[#D1D5DB] rounded-full text-sm font-semibold transition-all duration-200 hover:bg-[#F3F4F6] hover:text-[#111827] active:translate-y-px cursor-pointer shadow-sm"
           >
             <Users size={16} />
             Kelola Anggota
@@ -272,7 +272,7 @@ export function DashboardClient({
       >
         Iuran Anggota
         {activeTab === 'incomes' && (
-          <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#008B8B] rounded-t-full animate-[fadeIn_200ms_ease-out]" />
+          <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[#008B8B] rounded-t-full animate-fade-in" />
         )}
       </button>
       <button
@@ -281,7 +281,7 @@ export function DashboardClient({
       >
         Riwayat Pengeluaran
         {activeTab === 'expenses' && (
-          <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#008B8B] rounded-t-full animate-[fadeIn_200ms_ease-out]" />
+          <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[#008B8B] rounded-t-full animate-fade-in" />
         )}
       </button>
     </div>

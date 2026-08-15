@@ -30,10 +30,10 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       lang="id"
       className={`${openSans.variable} ${jetbrainsMono.variable} h-full`}
     >
-      <body className="min-h-[100dvh] flex flex-col bg-[#FFFFFF] text-[#333333] antialiased">
+      <body className="min-h-dvh flex flex-col bg-[#FFFFFF] text-[#333333] antialiased">
         {/* ── Header ──────────────────────────────────── */}
         <header className="sticky top-0 z-40 border-b border-[#E5E7EB] bg-[#FFFFFF]/95 backdrop-blur-sm shadow-sm">
-          <div className="mx-auto max-w-[1280px] w-full flex items-center justify-between px-6 py-3">
+          <div className="mx-auto max-w-7xl w-full flex items-center justify-between px-6 py-3">
             {/* Logo / App Name */}
             <div className="flex items-center gap-2">
               <span className="text-xl">📊</span>
@@ -48,7 +48,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         </header>
 
         {/* ── Main Content ────────────────────────────── */}
-        <main className="flex-1 mx-auto w-full max-w-[1280px] px-6 py-8">
+        <main className="flex-1 mx-auto w-full max-w-7xl px-6 py-8">
           {children}
         </main>
 

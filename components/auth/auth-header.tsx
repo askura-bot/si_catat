@@ -41,7 +41,7 @@ function LoginButton() {
           rounded-full
           text-sm font-semibold
           transition-all duration-200
-          hover:bg-[#008B8B]/5 active:translate-y-[1px]
+          hover:bg-[#008B8B]/5 active:translate-y-px
           cursor-pointer
         "
       >
@@ -98,7 +98,7 @@ function AdminBadge() {
           rounded-full
           text-sm font-medium
           transition-all duration-200
-          hover:bg-[#F3F4F6] active:translate-y-[1px]
+          hover:bg-[#F3F4F6] active:translate-y-px
           disabled:opacity-50 disabled:cursor-not-allowed
           cursor-pointer
         "
@@ -156,16 +156,16 @@ function LoginModal({ onClose }: { onClose: () => void }) {
         fixed inset-0 z-50
         flex items-center justify-center
         bg-[#333333]/40 backdrop-blur-sm
-        animate-[fadeIn_200ms_ease-out]
+        animate-fade-in
       "
     >
       <div
         className="
           relative w-full max-w-sm mx-4
           bg-[#FFFFFF] border border-[#E5E7EB]
-          rounded-[24px]
+          rounded-3xl
           shadow-[0_8px_32px_rgba(0,0,0,0.08)]
-          animate-[slideUp_420ms_ease-out]
+          animate-slide-up
           overflow-hidden
         "
       >
@@ -267,7 +267,7 @@ function LoginModal({ onClose }: { onClose: () => void }) {
               text-sm font-bold
               transition-all duration-200
               hover:bg-[#007676] hover:shadow-md
-              active:translate-y-[1px]
+              active:translate-y-px
               disabled:opacity-50 disabled:cursor-not-allowed
               cursor-pointer
             "

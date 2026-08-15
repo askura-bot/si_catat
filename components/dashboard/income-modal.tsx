@@ -54,9 +54,9 @@ export function IncomeModal({ periodId, activeMembers, onClose, onSuccess }: Inc
     <div
       ref={overlayRef}
       onClick={handleOverlayClick}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#333333]/40 backdrop-blur-sm animate-[fadeIn_200ms_ease-out] p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#333333]/40 backdrop-blur-sm animate-fade-in p-4"
     >
-      <div className="relative w-full max-w-md bg-[#FFFFFF] border border-[#E5E7EB] rounded-[24px] shadow-[0_8px_32px_rgba(0,0,0,0.08)] animate-[slideUp_420ms_ease-out] overflow-hidden">
+      <div className="relative w-full max-w-md bg-[#FFFFFF] border border-[#E5E7EB] rounded-3xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] animate-slide-up overflow-hidden">
         <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-[#E5E7EB]">
           <h2 className="text-xl font-bold text-[#333333] flex items-center gap-2">
             <Coins className="text-[#008B8B]" size={20} />
@@ -148,7 +148,7 @@ export function IncomeModal({ periodId, activeMembers, onClose, onSuccess }: Inc
             <button
               type="submit"
               disabled={isPending}
-              className="w-full h-11 flex items-center justify-center gap-2 bg-[#008B8B] text-[#FFFFFF] rounded-full text-sm font-bold transition-all duration-200 hover:bg-[#007676] hover:shadow-md active:translate-y-[1px] disabled:opacity-50 cursor-pointer"
+              className="w-full h-11 flex items-center justify-center gap-2 bg-[#008B8B] text-[#FFFFFF] rounded-full text-sm font-bold transition-all duration-200 hover:bg-[#007676] hover:shadow-md active:translate-y-px disabled:opacity-50 cursor-pointer"
             >
               {isPending ? 'Menyimpan...' : 'Simpan Iuran'}
             </button>
